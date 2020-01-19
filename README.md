@@ -1,5 +1,4 @@
-# react-native-product-list-app
-React-Native Product List App
+# React-Native Product List App
 
 
 ## Install: 
