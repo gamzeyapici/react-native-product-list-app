@@ -9,6 +9,43 @@ import {
 
 import productItems from '../mocks/products';
 
+class ProductListItem extends React.Component {
+
+  render(){
+    const { product } = this.props;
+
+    return <View style={styles.Item}>
+  
+    <View onTouchEnd={() => this.props.onPressItem()}  
+          style={{ justifyContent: 'flex-start', flex: 1 }}>
+
+      <Text style={{ fontSize: 18 }}>{product.title}</Text>
+
+    </View>
+
+    <View style={{ flexDirection: 'row' }}>
+      <View style={{ marginRight: 5 }}>
+        <Button title='+ADD'
+          style={{ fontSize: 18 }}
+          color='green'
+          disabled={product.count === 10}
+          onPress={() => this.props.onPressAdd()} />
+      </View>
+      <View style={{ alignItems: 'center', marginVertical: 5, marginRight: 5 }}>
+        <Text style={{ fontSize: 18, }}>{product.count}</Text>
+      </View>
+      <Button
+        title='-REMOVE'
+        style={{ fontSize: 18 }}
+        color='darkorange'
+        disabled={!product.count}
+        onPress={() => this.props.onPressRemove()} />
+    </View>
+
+  </View>;
+  }
+}
+
 class ProductList extends React.Component {
     static navigationOptions = {
         title: 'Product List',
@@ -50,41 +87,6 @@ class ProductList extends React.Component {
       navigate('ProductDetail', { product: item});
 
     }
-
-
-  
-    getItem(item) {
-      return <View style={styles.Item}>
-  
-        <View onTouchEnd={() => this.navigateProductDetail(item)}  
-              style={{ justifyContent: 'flex-start', flex: 1 }}>
-
-          <Text style={{ fontSize: 18 }}>{item.title}</Text>
-
-        </View>
-  
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ marginRight: 5 }}>
-            <Button title='+ADD'
-              style={{ fontSize: 18 }}
-              color='green'
-              disabled={item.count === 10}
-              onPress={() => this.handlePressAdd(item)} />
-          </View>
-          <View style={{ alignItems: 'center', marginVertical: 5, marginRight: 5 }}>
-            <Text style={{ fontSize: 18, }}>{item.count}</Text>
-          </View>
-          <Button
-            title='-REMOVE'
-            style={{ fontSize: 18 }}
-            color='darkorange'
-            disabled={!item.count}
-            onPress={() => this.handlePressRemove(item)} />
-        </View>
-  
-      </View>;
-  
-    }
   
     getBasketItems() {
       return this.state.products.filter(item => item.count);
@@ -99,11 +101,15 @@ class ProductList extends React.Component {
       
           <View style={styles.ListItems}>
   
-            <FlatList
+          <FlatList
               data={this.state.products}
-              renderItem={({ item }) => this.getItem(item)}
+              renderItem={({ item }) => <ProductListItem product={item}
+                                                         onPressItem={() => this.navigateProductDetail(item)}
+                                                         onPressAdd={() => this.handlePressAdd(item)}
+                                                         onPressRemove={() => this.handlePressRemove(item)} />}
               keyExtractor={item => item.id.toString()}
             />
+        
           </View>
           <View style={styles.StatusBar}>
             <Text style={{ color: 'white' }}>
